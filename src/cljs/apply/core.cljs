@@ -13,7 +13,7 @@
             [reagent.core :as r]
             [re-frame.core :as rf :refer [dispatch subscribe]]
             [iface.components.ptm.icons :as icons]
-            [iface.components.ptm.ui :as ui]))
+            [iface.components.ptm.ui.button :as button]))
 
 
 (defn logout []
@@ -40,13 +40,10 @@
     [:br]
     [:br]
 
-    [ui/button
-     {:on-click #(.log js/console "yes, this is dog")
-      :type     :secondary
-      :class    "mt5"}
-     "Let's go!"]
-
-    [ui/pill {:active false} "pill"]]])
+    [button/primary
+     {:on-click #(js/console.log "primary button engaged")
+      :class "mt5"}
+     "things and stuff "]]])
 
 
 (defn- welcome-2 []
