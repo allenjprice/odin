@@ -39,4 +39,14 @@
 
 (defn secondary
   [props]
-  [:div])
+  (into [button (assoc props :type :secondary)] (r/children (r/current-component))))
+
+
+(defn text
+  [props]
+  (into [button (assoc props :type :text)] (r/children (r/current-component))))
+
+
+(defn upload
+  [props]
+  (into [:div (update props :class #(str % " button-upload"))] (r/children (r/current-component))))

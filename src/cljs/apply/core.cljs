@@ -40,7 +40,7 @@
     [:br]
     [:br]
 
-    [button/primary
+    [button/upload
      {:on-click #(js/console.log "primary button engaged")
       :class "mt5"}
      "things and stuff "]]])
