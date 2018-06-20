@@ -7,13 +7,10 @@
             [apply.db :as db]
             [apply.sections.logistics.pets]))
 
-
-
-(defmethod events/save-step-fx :logistics/move-in-date
-  [db {:keys [move-in-range] :as params}]
-  {:db       (assoc db :logistics/move-in-date  move-in-range)
-   :dispatch [:step/advance]})
-
+;; ==============================================================================
+;; logistics/move-in-date =======================================================
+;; ==============================================================================
+;; NOTE - This step is implemented using the approach described in this PR as "Possibility 1"
 
 (defmethod content/view :logistics/move-in-date
   [_]
@@ -33,6 +30,13 @@
     [ant/button
      {:on-click #(dispatch [:step.current/next {:move-in-range :flexible}])}
      "i'm flexible"]]])
+
+
+
+;; ==============================================================================
+;; logistics.move-in-date/choose-date ===========================================
+;; ==============================================================================
+;; NOTE - This step is implemented using the approach described in this PR as "Possibility 2"
 
 
 (defmethod events/save-step-fx :logistics.move-in-date/choose-date
@@ -58,6 +62,7 @@
 ;; ==============================================================================
 ;; logistics/occupancy ==========================================================
 ;; ==============================================================================
+;; NOTE - This step is implemented using the approach described in this PR as "Possibility 3"
 
 
 (defmethod events/save-step-fx :logistics/occupancy
