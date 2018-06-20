@@ -2,7 +2,8 @@
   (:require [apply.db :as db]
             [apply.routes :as routes]
             [re-frame.core :refer [reg-event-db reg-event-fx path]]
-            [toolbelt.core :as tb]))
+            [toolbelt.core :as tb]
+            [iface.utils.log :as log]))
 
 
 ;; ==============================================================================
@@ -80,3 +81,8 @@
  :step.current/next
  (fn [{db :db} [_ params]]
    {:dispatch [:step.current/save params]}))
+
+(reg-event-fx
+ :step/advance
+ (fn [{db :db} [_ params]]
+   {:route (next-route db params)}))

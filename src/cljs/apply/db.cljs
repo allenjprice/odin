@@ -2,7 +2,8 @@
   (:require [apply.routes :as routes]
             [clojure.string :as string]
             [iface.modules.loading :as loading]
-            [iface.utils.formatters :as formatters :refer [format]]))
+            [iface.utils.formatters :as formatters :refer [format]]
+            [iface.utils.log :as log]))
 
 
 (def ^:private nav-items
@@ -28,15 +29,26 @@
   ::nav)
 
 
+(def ^:private application-default
+  {:logistics {}
+   :community {}
+   :personal  {}
+   :payment   {}})
+
+
+(def application-path
+  ::application)
+
 (defn bootstrap [account]
   (merge
-   {:lang    :en
-    :account account
-    nav-path nav-items
-    :route   {:page      :home
-              :path      [:home]
-              :params    {}
-              :requester account}}
+   {:lang            :en
+    :account         account
+    nav-path         nav-items
+    :route           {:page      :home
+                      :path      [:home]
+                      :params    {}
+                      :requester account}
+    application-path application-default}
    loading/db))
 
 
@@ -89,8 +101,8 @@
 
 
 (defn- step-data [db]
-  (let [step (-> db :route route->step)]
-    (get db step-dispatch {})))
+  (let [step (step-dispatch db)]
+    (get db step {})))
 
 
 ;; next =========================================================================
@@ -104,7 +116,9 @@
   ;; NOTE: inspection of `db` is needed for a proper implementation of this step
   ;; because some options within the step itself allow one to skip selection of
   ;; a date, and in one case triggers a separate flow.
-  :logistics.move-in-date/choose-date)
+  (if (= :date (step-data db))
+    :logistics.move-in-date/choose-date
+    :logistics/occupancy))
 
 
 (defmethod next-step :logistics.move-in-date/choose-date
@@ -112,12 +126,12 @@
   :logistics/occupancy)
 
 
-(defmethod next-step :logistics/occupancy
+#_(defmethod next-step :logistics/occupancy
   [db]
   :logistics/pets)
 
 
-(defmethod next-step :logistics/pets
+#_(defmethod next-step :logistics/pets
   [db]
   ;; NOTE: See above
   :community/select)
@@ -223,7 +237,7 @@
   :logistics/pets)
 
 
-(defmethod previous-step :logistics/pets
+#_(defmethod previous-step :logistics/pets
   [db]
   :logistics/occupancy)
 
@@ -243,7 +257,7 @@
 ;; implementation of this function and have it just return `true`
 (defn has-next-button? [db]
   true
-  #_(let [step (step-dispatch db)]
+  (let [step (step-dispatch db)]
     (boolean
      (#{:logistics.move-in-date/choose-date
         :logistics.pets/dog
