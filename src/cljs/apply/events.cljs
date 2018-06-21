@@ -70,7 +70,7 @@
   (default-save-fx db params))
 
 
-(defmethod events/save-step-fx :logistics/move-in-date
+(defmethod save-step-fx :logistics/move-in-date
   [db {:keys [move-in-range] :as params}]
   {:db       (assoc db :logistics/move-in-date  move-in-range)
    :dispatch [:step/advance]})
