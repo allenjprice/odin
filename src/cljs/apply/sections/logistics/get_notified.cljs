@@ -25,7 +25,7 @@
 
 (defmethod content/view step
   [_]
-  (let [date (subscribe [:step/data])]
+  (let [date (subscribe [:step/data :logistics.move-in-date/choose-date])]
     [:div
      [:div.w-60-l.w-100
       [:h1 "We'll send you an email notification before " (format/date-month-day @date) " to remind  you to apply."]

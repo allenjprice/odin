@@ -99,6 +99,12 @@
 
 
 (reg-sub
+ :step/data
+ (fn [db [_ step]]
+   (step db)))
+
+
+(reg-sub
  :step/current
  :<- [:route/current]
  (fn [route _]

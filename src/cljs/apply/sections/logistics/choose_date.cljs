@@ -39,15 +39,6 @@
   (some? (step db)))
 
 
-;; subs =========================================================================
-
-
-(reg-sub
- :step/data
- (fn [db _]
-   (-> (step db))))
-
-
 ;; events =======================================================================
 
 
@@ -65,7 +56,7 @@
 
 (defmethod content/view step
   [_]
-  (let [data (subscribe [:step/data])]
+  (let [data (subscribe [:step/data step])]
     (log/log @data)
     [:div
      [:div.w-60-l.w-100
