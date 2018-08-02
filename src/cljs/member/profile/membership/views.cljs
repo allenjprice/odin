@@ -10,7 +10,8 @@
             [reagent.core :as r]
             [re-frame.core :refer [dispatch subscribe]]
             [toolbelt.core :as tb]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [iface.utils.log :as log]))
 
 
 ;; =============================================================================
@@ -194,7 +195,7 @@
           {:title (cond
                     (empty? @sources) (r/as-element [link-bank-tooltip-title])
                     (> late_fee_due 0)    (format/format "A late fee of %s has been added."
-                                                     (format/currency late_fee_due))
+                                                         (format/currency late_fee_due))
                     :otherwise        nil)}
           [ant/button
            {:type     (if (rent-overdue? payment) :danger :primary)
@@ -287,6 +288,28 @@
       @payments)]))
 
 
+;; ==============================================================================
+;; Move-out Notice
+;; ==============================================================================
+
+
+(defn move-out-notice-card
+  "Renders a notification card reminding the member of their upcoming move-out."
+  []
+  [ant/card
+   [:div.columns
+    [:div.columns.is-2
+     [:div.flexcol.flex-center
+      [:span.icon.is-large
+       {:class "text-yellow"}
+       [:i.fa.fa-3x {:class "fa-exclamation-circle"}]]]]
+    [:div.column
+     [:h4.bold "Your upcoming move-out"]
+     [:p.fs2 "You've notified us about your intent to move out on DATE. Please
+     contact our Community Team if your plans have changed or you have any
+     questions."]]]])
+
+
 ;; =============================================================================
 ;; Membership + License
 ;; =============================================================================
@@ -301,7 +324,8 @@
        [:h2 "Status"]
        [deposit-status-card]
        [rent-status-card]
-       [other-payments-cards]])))
+       [other-payments-cards]
+       [move-out-notice-card]])))
 
 
 (defn membership []
@@ -320,4 +344,8 @@
 
         [:div.column.is-5
          [:h2 "Membership Agreement"]
-         [membership/license-summary @license {:loading @loading}]]])]))
+         [membership/license-summary @license
+          {:loading @loading
+           :content [ant/button
+                     {:on-click #(log/log "button!")}
+                     "button!"]}]]])]))
